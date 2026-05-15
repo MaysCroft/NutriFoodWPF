@@ -4,12 +4,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using SQLite;
 
-namespace NutriFoodWPF.DTO
+namespace NutriFoodWPF.Models
 {
-    class AlimentoApiRequest
+    public class Alimento
     {
+        [PrimaryKey]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
+
         [JsonPropertyName("name")]
         public string Nome { get; set; }
 
