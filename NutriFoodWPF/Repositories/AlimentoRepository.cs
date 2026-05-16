@@ -12,7 +12,7 @@ namespace NutriFoodWPF.Repositories
     {
         public void InserirAlimento(Alimento alimento)
         {
-            using (var connection = Database.GetConnection())
+            using (var connection = DatabaseFirestore.GetConnection())
             {
                 connection.Open();
                 var command = connection.CreateCommand();
