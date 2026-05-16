@@ -1,50 +1,63 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Windows.Input;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using NutriFoodWPF.Models;
-using System.Net.Http.Json;
+using Google.Cloud.Firestore;
 
 namespace NutriFoodWPF.View_Models
 {
     internal class MainViewModel : BaseViewModel
     {
-        public ObservableCollection<string> Alimentos { get; set; }
+        private FirestoreDb _nutrifoodbanco { get; set; }
+        public ObservableCollection<Alimento> Alimentos { get; set; }
         public ICommand CarregarAlimentosCommand { get; }
 
         public MainViewModel()
         {
-            Alimentos = new ObservableCollection<string>();
-            CarregarAlimentosCommand = new RelayCommand(CarregarAlimentos);
+            Alimentos = new ObservableCollection<Alimento>();
+            CarregarAlimentosCommand = new RelayCommand(async ()
+                => await CarregarAlimentos());
+
+            IniciarFirestore();
         }
 
-        private async void CarregarAlimentos()
+        private void IniciarFirestore()
         {
-            var httpClient = new HttpClient();
+            // O caminho para o arquivo de credenciais deve ser ajustado conforme a localização do seu arquivo JSON
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config_API", "firebase-key.json");
+            // Define a variável de ambiente para as credenciais do Google Cloud
+            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
+            // Inicializa a instância do FirestoreDb
+            _nutrifoodbanco = FirestoreDb.Create("nutrifoodwpf");
+        }
 
-            var dados = await httpClient.GetFromJsonAsync<List<Alimento>>(
-                "https://localhost:7257/api/v1/alimentos");
-
-            Alimentos.Clear();
-
-            foreach (var alimento in dados)
+        private async Task CarregarAlimentos()
+        {
+            try
             {
-                Alimentos.Add(alimento.Nome);
-                Alimentos.Add(alimento.Calorias.ToString());
-                Alimentos.Add(alimento.PorcaoGramas.ToString());
-                Alimentos.Add(alimento.GorduraTotal.ToString());
-                Alimentos.Add(alimento.GorduraSaturada.ToString());
-                Alimentos.Add(alimento.Proteina.ToString());
-                Alimentos.Add(alimento.Sodio.ToString());
-                Alimentos.Add(alimento.Potassio.ToString());
-                Alimentos.Add(alimento.Colesterol.ToString());
-                Alimentos.Add(alimento.Carboidratos.ToString());
-                Alimentos.Add(alimento.Fibras.ToString());
-                Alimentos.Add(alimento.Acucar.ToString());
+                CollectionReference alimentosRef = _nutrifoodbanco.Collection("alimentos");
+                QuerySnapshot snapshot = await alimentosRef.GetSnapshotAsync();
+                Alimentos.Clear();
+
+                foreach (DocumentSnapshot doc in snapshot.Documents)
+                {
+                    if (doc.Exists)
+                    {
+                        Alimento alimento = doc.ConvertTo<Alimento>();
+                        Alimentos.Add(alimento);
+                    }
+                }
+            }
+            catch
+            {
+                throw new Exception("Erro ao carregar dados");
             }
         }
     }
