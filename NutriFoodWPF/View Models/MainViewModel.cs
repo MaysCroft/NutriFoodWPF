@@ -17,15 +17,27 @@ namespace NutriFoodWPF.View_Models
     {
         private FirestoreDb _nutrifoodbanco { get; set; }
         public ObservableCollection<Alimento> Alimentos { get; set; }
+        public ICommand PesquisarCommand { get; }
         public ICommand CarregarAlimentosCommand { get; }
 
         public MainViewModel()
         {
             Alimentos = new ObservableCollection<Alimento>();
-            CarregarAlimentosCommand = new RelayCommand(async ()
-                => await CarregarAlimentos());
+            PesquisarCommand = new RelayCommand(async () => await ExecutarPesquisa());
+            CarregarAlimentosCommand = new RelayCommand(async () => await CarregarAlimentos());
 
             IniciarFirestore();
+        }
+
+        private string _textoPesquisa;
+        public string TextoPesquisa
+        {
+            get => _textoPesquisa;
+            set
+            {
+                _textoPesquisa = value;
+                OnPropertyChanged(nameof(TextoPesquisa));
+            }
         }
 
         private void IniciarFirestore()
@@ -36,6 +48,14 @@ namespace NutriFoodWPF.View_Models
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
             // Inicializa a instância do FirestoreDb
             _nutrifoodbanco = FirestoreDb.Create("nutrifoodwpf");
+        }
+
+        private async Task ExecutarPesquisa()
+        {
+            if (string.IsNullOrWhiteSpace(TextoPesquisa)) 
+                return;
+
+            await CarregarAlimentos();
         }
 
         private async Task CarregarAlimentos()

@@ -7,9 +7,118 @@
         mc:Ignorable="d"
         Title="NutriFood" 
         Height="450" 
-        Width="800">
-    
-    <Grid>
+        Width="800"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized">
 
+    <Grid Margin="10">
+        <TabControl>
+            <TabItem Header="Procura de Alimento">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="151*"/>
+                        <ColumnDefinition Width="603*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal" 
+                                Grid.Row= "0" 
+                                Margin="0,0,0,15" 
+                                Grid.ColumnSpan="2">
+
+                        <TextBlock Text="Buscar Alimento:" 
+                                   VerticalAlignment="Center" 
+                                   Margin="0,0,10,0" 
+                                   FontSize="15"/>
+
+                        <TextBox Width="300" 
+                                 Height="30" 
+                                 Text="{Binding TextoPesquisa, UpdateSourceTrigger=PropertyChanged}" 
+                                 VerticalContentAlignment="Center"/>
+
+                        <Button Content="Pesquisar" 
+                                Command="{Binding PesquisarCommand}" 
+                                Width="100" 
+                                Margin="10,0,0,0" 
+                                Cursor="Hand"
+                                Background="#007ACC" 
+                                Foreground="White" 
+                                FontWeight="Bold"/>
+                    </StackPanel>
+
+                    <DataGrid Grid.Row="1" 
+                              ItemsSource="{Binding Alimentos}" 
+                              AutoGenerateColumns="False" 
+                              CanUserAddRows="False"
+                              IsReadOnly="True" 
+                              GridLinesVisibility="Horizontal"
+                              Background="White"
+                              BorderThickness="1" 
+                              Grid.ColumnSpan="2">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" 
+                                                Binding="{Binding Id}" 
+                                                Width="30"/>
+
+                            <DataGridTextColumn Header="Nome" 
+                                                Binding="{Binding Nome}" 
+                                                Width="*"/>
+
+                            <DataGridTextColumn Header="Calorias (kcal)" 
+                                                Binding="{Binding Calorias}" 
+                                                Width="85"/>
+
+                            <DataGridTextColumn Header="Porção (g)" 
+                                                Binding="{Binding PorcaoGramas}" 
+                                                Width="70"/>
+
+                            <DataGridTextColumn Header="Gordura (g)" 
+                                                Binding="{Binding GorduraTotal}" 
+                                                Width="80"/>
+
+                            <DataGridTextColumn Header="Gordura Saturada (g)" 
+                                                Binding="{Binding GorduraSaturada}" 
+                                                Width="125"/>
+
+                            <DataGridTextColumn Header="Proteína (g)" 
+                                                Binding="{Binding Proteina}" 
+                                                Width="80"/>
+
+                            <DataGridTextColumn Header="Sódio (mg)" 
+                                                Binding="{Binding Sodio}" 
+                                                Width="80"/>
+
+                            <DataGridTextColumn Header="Potássio (mg)" 
+                                                Binding="{Binding Potassio}" 
+                                                Width="85"/>
+
+                            <DataGridTextColumn Header="Colesterol (g)" 
+                                                Binding="{Binding Colesterol}" 
+                                                Width="80"/>
+
+                            <DataGridTextColumn Header="Carboidratos (g)" 
+                                                Binding="{Binding Carboidratos}" 
+                                                Width="100"/>
+
+                            <DataGridTextColumn Header="Fibras (g)" 
+                                                Binding="{Binding Fibras}" 
+                                                Width="80"/>
+
+                            <DataGridTextColumn Header="Açúcar (g)" 
+                                                Binding="{Binding Acucar}" 
+                                                Width="80"/>
+
+                            <DataGridTextColumn Header="Data de Validação" 
+                                                Binding="{Binding DataValidacao}" 
+                                                Width="110"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

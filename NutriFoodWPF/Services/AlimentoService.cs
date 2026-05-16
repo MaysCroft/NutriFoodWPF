@@ -17,11 +17,13 @@ namespace NutriFoodWPF.Services
 
         private static readonly HttpClient _httpClient = new HttpClient
         {
+            // Configura o tempo limite para a requisição HTTP
             Timeout = TimeSpan.FromSeconds(30)
         };
 
         private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
         {
+            // Configura a serialização para ser case-insensitive e ignorar valores nulos
             PropertyNameCaseInsensitive = true,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
