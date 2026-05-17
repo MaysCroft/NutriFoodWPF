@@ -9,9 +9,11 @@ using System.Threading.Tasks;
 
 namespace NutriFoodWPF.Models
 {
+    // Atributo para mapear a classe como um documento do Firestore
     [FirestoreData]
     public class Alimento
     {
+        // Propriedades do alimento, mapeadas para os campos do Firestore e JSON
         [FirestoreProperty]
         [JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;

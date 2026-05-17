@@ -47,7 +47,7 @@ namespace NutriFoodWPF.View_Models
             // Define a variável de ambiente para as credenciais do Google Cloud
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
             // Inicializa a instância do FirestoreDb
-            _nutrifoodbanco = FirestoreDb.Create("nutrifoodwpf");
+            _nutrifoodbanco = FirestoreDb.Create("alimentos");
         }
 
         private async Task ExecutarPesquisa()
@@ -62,16 +62,26 @@ namespace NutriFoodWPF.View_Models
         {
             try
             {
+                // Obtém a referência para a coleção "alimentos" no Firestore
                 CollectionReference alimentosRef = _nutrifoodbanco.Collection("alimentos");
+                // Realiza a consulta para obter todos os documentos da coleção
                 QuerySnapshot snapshot = await alimentosRef.GetSnapshotAsync();
+                // Limpa a coleção de alimentos antes de adicionar os novos dados
                 Alimentos.Clear();
 
+                // Itera sobre os documentos retornados pela consulta e converte cada um para um objeto Alimento
                 foreach (DocumentSnapshot doc in snapshot.Documents)
                 {
+                    // Verifica se o documento existe antes de tentar convertê-lo
                     if (doc.Exists)
                     {
+                        // Converte o documento para um objeto Alimento e adiciona à coleção ObservableCollection
                         Alimento alimento = doc.ConvertTo<Alimento>();
-                        Alimentos.Add(alimento);
+                        // Verifica se o nome do alimento contém o texto de pesquisa (ignorando maiúsculas/minúsculas)
+                        if (alimento.Nome.Contains(TextoPesquisa, StringComparison.OrdinalIgnoreCase))
+                        {
+                            Alimentos.Add(alimento);
+                        }
                     }
                 }
             }
