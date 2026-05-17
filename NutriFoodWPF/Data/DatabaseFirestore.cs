@@ -3,58 +3,60 @@ using System.IO;
 using System.Configuration;
 using Google.Cloud.Firestore;
 using Google.Apis.Auth.OAuth2;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 
 namespace NutriFoodWPF.Data
 {
     public class DatabaseFirestore
     {
-        /// <summary>
-        /// Propriedade usada pelo FirestoreService para realizar as operações no banco.
-        /// </summary>
-        public FirestoreDb Database { get; private set; }
+        private static readonly string pastaBase = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NutriFoodWPF");
 
-        public DatabaseFirestore(IConfiguration configuration)
+        private static readonly string caminhoBanco = Path.Combine(pastaBase, "nutrifoodwpf.db");
+
+        private static readonly string connectionstring = $"Data Source={caminhoBanco}";
+
+        static DatabaseFirestore()
         {
-            try
+            if (!Directory.Exists(pastaBase))
             {
-                /// Busca os dados do appsettings.json                 
-                string idProjeto = configuration["FirebaseConfig:ProjectId"]
-                    ?? throw new Exception("A chave 'ProjectId' não foi encontrada no appsettings.json.");
-
-                string nomeArquivo = configuration["FirebaseConfig:JsonPath"];
-
-                /// Monta o caminho considerando a pasta 'config_API'
-                string caminhoCompleto = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                    "config_API", nomeArquivo);
-
-                /// Validações para garantir que as configurações estão corretas
-                if (string.IsNullOrEmpty(nomeArquivo))
-                {
-                    throw new Exception(
-                        "A chave 'JsonPath' não foi encontrada no appsettings.json.");
-                }
-
-                if (!File.Exists(caminhoCompleto))
-                {
-                    throw new
-                        FileNotFoundException(
-                        $"Arquivo de credenciais do Firebase não encontrado: {caminhoCompleto}");
-                }
-
-                var credential = GoogleCredential.FromFile(caminhoCompleto);
-
-                Database = new FirestoreDbBuilder
-                {
-                    ProjectId = idProjeto,
-                    Credential = credential
-                }.Build();
+                Directory.CreateDirectory(pastaBase);
             }
-            catch (Exception ex)
+
+            if (!File.Exists(caminhoBanco))
             {
-                throw new Exception(
-                    $"Erro Crítico ao inicializar FirestoreContext: {ex.Message}");
+                using (var connection = GetConnection())
+                {
+                    connection.Open();
+
+                    var command = connection.CreateCommand();
+                    command.CommandText = @"
+                        CREATE TABLE IF NOT EXISTS Alimentos (
+                            Id TEXT PRIMARY KEY AUTOINCREMENT,
+                            Nome TEXT NOT NULL,
+                            Calorias DOUBLE NOT NULL,
+                            PorcaoGramas DOUBLE NOT NULL,
+                            GorduraTotal DOUBLE NOT NULL,
+                            GorduraSaturada DOUBLE NOT NULL,
+                            Proteina DOUBLE NOT NULL,
+                            Sodio DOUBLE NOT NULL,
+                            Potassio DOUBLE NOT NULL
+                            Colesterol DOUBLE NOT NULL,
+                            Carboidratos DOUBLE NOT NULL,
+                            Fibras DOUBLE NOT NULL,
+                            Acucar DOUBLE NOT NULL
+                        );
+                    ";
+
+                    command.ExecuteNonQuery();
+                }
             }
+        }
+
+        public static SqliteConnection GetConnection()
+        {
+            return new SqliteConnection(connectionstring);
         }
     }
 }
