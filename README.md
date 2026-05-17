@@ -2,6 +2,8 @@
 
 NutriFoodWPF é uma aplicação desktop desenvolvida em C# utilizando o framework WPF (.NET 8) para o gerenciamento e consulta de informações nutricionais de alimentos. O projeto segue o padrão de arquitetura **MVVM (Model-View-ViewModel)** para garantir a separação de responsabilidades e facilitar a manutenção.
 
+---
+
 ## 🚀 Funcionalidades
 
 * **Busca de Alimentos**: Interface intuitiva para pesquisar alimentos por nome.
@@ -10,15 +12,16 @@ NutriFoodWPF é uma aplicação desktop desenvolvida em C# utilizando o framewor
 * **Validação via API**: Utilização de um serviço externo para validar e buscar dados nutricionais precisos antes do salvamento.
 * **Banco de Dados Local**: Estrutura preparada para utilização de SQLite para cache ou armazenamento local.
 
+---
+
 ## 🛠️ Tecnologias Utilizadas
 
 * **Linguagem**: C#
 * **Framework UI**: WPF (Windows Presentation Foundation) no .NET 8.0
 * **Padrão de Projeto**: MVVM
-* **Banco de Dados**:
-* Google Cloud Firestore (Nuvem)
-* SQLite (Local)
+* **Banco de Dados**: Google Cloud Firestore (Nuvem) e SQLite (Local)
 
+<br>
 
 * **Principais Bibliotecas (NuGet)**:
 * `CommunityToolkit.Mvvm`: Para implementação simplificada do padrão MVVM.
@@ -26,7 +29,7 @@ NutriFoodWPF é uma aplicação desktop desenvolvida em C# utilizando o framewor
 * `RestSharp`: Para consumo de APIs REST.
 * `Newtonsoft.Json` e `System.Text.Json`: Para manipulação de dados JSON.
 
-
+---
 
 ## 📂 Estrutura do Projeto
 
@@ -39,6 +42,8 @@ O projeto está organizado da seguinte forma:
 * **Repositories**: Camada de acesso a dados, tratando a lógica de salvamento e recuperação no Firestore.
 * **Data**: Configurações de conexão com o banco de dados local SQLite.
 * **Commands**: Implementações de comandos como `RelayCommand` para interações da UI.
+
+---
 
 ## ⚙️ Configuração e Instalação
 
@@ -56,7 +61,7 @@ Para que a integração com o Firestore funcione, é necessário:
 3. Colocá-lo na pasta `NutriFoodWPF/config_API/`.
 * *Nota: O arquivo está configurado no `.csproj` para ser copiado automaticamente para o diretório de saída*.
 
-
+---
 
 ## 📝 Como usar
 
@@ -64,3 +69,5 @@ Para que a integração com o Firestore funcione, é necessário:
 2. Na aba "Procura de Alimento", digite o nome do item desejado no campo de busca.
 3. Clique em "Pesquisar" para carregar os dados nutricionais salvos ou validados.
 4. Os resultados serão exibidos automaticamente na grade central.
+
+---
