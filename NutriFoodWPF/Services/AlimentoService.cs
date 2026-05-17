@@ -13,7 +13,7 @@ namespace NutriFoodWPF.Services
 {
     public class AlimentoService
     {
-        private const string BaseUrl = "http://apinutrifood.runasp.net/";
+        private const string BaseUrl = "https://apinutrifood.runasp.net/api/AlimentoValidado";
 
         private static readonly HttpClient _httpClient = new HttpClient
         {

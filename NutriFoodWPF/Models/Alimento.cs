@@ -1,11 +1,10 @@
-﻿using Google.Cloud.Firestore;
-using SQLite;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Text;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Google.Cloud.Firestore;
 
 namespace NutriFoodWPF.Models
 {

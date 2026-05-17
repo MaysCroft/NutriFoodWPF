@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,10 +16,34 @@ namespace NutriFoodWPF.Repositories
         private readonly AlimentoService _service;
         private readonly FirestoreDb _firestoreDb;
 
-        public AlimentoRepository(FirestoreDb db)
+        public AlimentoRepository()
         {
             _service = new AlimentoService();
-            _firestoreDb = db;
+            // O caminho para o arquivo de credenciais deve ser ajustado conforme a localização do seu arquivo JSON
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config_API", "firebase-key.json");
+            // Define a variável de ambiente para as credenciais do Google Cloud
+            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
+
+            _firestoreDb = FirestoreDb.Create("nutrifoodwpf");
+        }
+
+        public async Task<List<Alimento>> ObterAlimentos()
+        {
+            var listaAlimentos = new List<Alimento>();
+
+            // Obtém a coleção "nutrifoodwpf" do Firestore
+            CollectionReference alimentosRef = _firestoreDb.Collection("nutrifoodwpf");
+            QuerySnapshot snapshot = await alimentosRef.GetSnapshotAsync();
+
+            foreach (DocumentSnapshot doc in snapshot.Documents)
+            {
+                if (doc.Exists)
+                {
+                    listaAlimentos.Add(doc.ConvertTo<Alimento>());
+                }
+            }
+
+            return listaAlimentos;
         }
 
         public async Task<bool> SalvarDados(Alimento novoAlimento)

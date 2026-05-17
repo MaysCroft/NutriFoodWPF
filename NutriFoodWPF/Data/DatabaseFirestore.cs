@@ -2,7 +2,7 @@
 using System.IO;
 using System.Configuration;
 using Google.Cloud.Firestore;
-using Google.Apis.Auth.OAuth2; // Adicionado para usar o GoogleCredential
+using Google.Apis.Auth.OAuth2;
 using Microsoft.Extensions.Configuration;
 
 namespace NutriFoodWPF.Data
