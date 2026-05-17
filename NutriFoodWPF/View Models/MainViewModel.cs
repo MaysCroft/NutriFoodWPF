@@ -47,7 +47,7 @@ namespace NutriFoodWPF.View_Models
             // Define a variável de ambiente para as credenciais do Google Cloud
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
             // Inicializa a instância do FirestoreDb
-            _nutrifoodbanco = FirestoreDb.Create("alimentos");
+            _nutrifoodbanco = FirestoreDb.Create("nutrifoodwpf");
         }
 
         private async Task ExecutarPesquisa()
@@ -62,8 +62,8 @@ namespace NutriFoodWPF.View_Models
         {
             try
             {
-                // Obtém a referência para a coleção "alimentos" no Firestore
-                CollectionReference alimentosRef = _nutrifoodbanco.Collection("alimentos");
+                // Obtém a referência para a coleção "nutrifoodwpf" no Firestore
+                CollectionReference alimentosRef = _nutrifoodbanco.Collection("nutrifoodwpf");
                 // Realiza a consulta para obter todos os documentos da coleção
                 QuerySnapshot snapshot = await alimentosRef.GetSnapshotAsync();
                 // Limpa a coleção de alimentos antes de adicionar os novos dados
@@ -85,9 +85,10 @@ namespace NutriFoodWPF.View_Models
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw new Exception("Erro ao carregar dados");
+                Console.WriteLine($"Erro ao carregar alimentos: {ex.Message}");
+                throw;
             }
         }
     }

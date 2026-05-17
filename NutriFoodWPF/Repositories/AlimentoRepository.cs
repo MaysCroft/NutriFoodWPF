@@ -1,12 +1,12 @@
-﻿using Google.Cloud.Firestore;
-using NutriFoodWPF.Data;
-using NutriFoodWPF.Models;
-using NutriFoodWPF.Services;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using NutriFoodWPF.Data;
+using NutriFoodWPF.Models;
+using NutriFoodWPF.Services;
+using Google.Cloud.Firestore;
 
 namespace NutriFoodWPF.Repositories
 {
@@ -26,10 +26,13 @@ namespace NutriFoodWPF.Repositories
             // Valida o alimento usando o serviço
             var alimentoValidado = await _service.BuscarAlimento(novoAlimento);
 
+            if (alimentoValidado == null)
+                return false;
+
             if (alimentoValidado != null)
             {
                 // Se a validação for bem-sucedida, salva o alimento no Firestore
-                CollectionReference colRef = _firestoreDb.Collection("alimentos");
+                CollectionReference colRef = _firestoreDb.Collection("nutrifoodwpf");
                 // Se o alimento já tiver um ID, use-o para atualizar o documento existente,
                 // caso contrário, crie um novo documento
                 DocumentReference docRef = string.IsNullOrEmpty(alimentoValidado.Id)
